@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import com.cos.hospital.domain.Hospital;
 import com.cos.hospital.domain.HospitalRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +24,7 @@ public class DownloadBatch {
 	
 	private final HospitalRepository hospitalRepository;
 	
-	@Scheduled(cron= "0 * * * * *", zone = "Asia/Seoul")
+	@Scheduled(cron= "0 * * * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
  	public void startBatch() throws Exception {
 		log.info("cron test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("cron Test 입니다. !!!");
@@ -39,6 +38,7 @@ public class DownloadBatch {
 		int numOfRows = 1000;
 		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
 		String[] spclAdmTyCd = {"A0","97","99"};
+		String[] tempType = {"국민안심병원","코로나 검사 실시기관","코로나 선별진료소 운영기관"};
 		String type = "json";
 
 		try {
@@ -63,13 +63,14 @@ public class DownloadBatch {
 		            .queryParam("_type", type)
 		            .build(true);
 				
-				System.out.println(uriComponents.toUri());
 				// get 요청으로 url보내서 ResponseDto로 맵핑
 				ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
 				//System.out.println(dto.getResponse());
 				List<Item> items = new ArrayList<>();
 				items = dto.getResponse().getBody().getItems().getItem();
 
+				// 카테고리로 바꿔서 DB에 저장
+				String category = tempType[i];
 				// 콜렉션에 담기
 					hospitals.addAll(items.stream().map(
 					(s) -> {
@@ -78,16 +79,14 @@ public class DownloadBatch {
 						.hospTyTpCd(s.getHospTyTpCd())
 						.sgguNm(s.getSgguNm())
 						.sidoNm(s.getSidoNm())
-						.spclAdmTyCd(s.getSpclAdmTyCd())
+						.spclAdmTyCd(category)
 						.telno(s.getTelno())
 						.yadmNm(s.getYadmNm())
 						.build();
 					}
 				).collect(Collectors.toList()));
 			}
-			for(Hospital h : hospitals){
-				//System.out.println(h.getHospTyTpCd());
-			}
+
 			// 기존 데이터 다 삭제하기 - yml에서 ddl update로 체크하기
 			hospitalRepository.deleteAll();
 
