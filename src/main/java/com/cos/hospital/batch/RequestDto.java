@@ -1,4 +1,4 @@
-package batch;
+package com.cos.hospital.batch;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,8 +1,11 @@
-package batch;
+package com.cos.hospital.batch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.cos.hospital.domain.Hospital;
+import com.cos.hospital.domain.HospitalRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import domain.Hospital;
-import domain.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 // 1주일에 한번씩 다운로드 해서 DB에 변경하기

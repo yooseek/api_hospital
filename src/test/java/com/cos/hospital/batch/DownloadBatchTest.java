@@ -1,16 +1,17 @@
-package batch;
+package com.cos.hospital.batch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.cos.hospital.batch.ResponseDto;
+import com.cos.hospital.domain.Hospital;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import domain.Hospital;
 
 
 @Component
@@ -57,7 +58,9 @@ public class DownloadBatchTest {
 					.build();
 				}
 			).collect(Collectors.toList());
-			
+			for(Hospital h : hospitals){
+				System.out.println(h.getId());
+			}
 
 		} catch(Exception e) {
 			e.printStackTrace();

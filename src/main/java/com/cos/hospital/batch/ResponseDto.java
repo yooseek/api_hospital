@@ -1,4 +1,4 @@
-package batch;
+package com.cos.hospital.batch;
 
 import java.util.List;
 import lombok.Data;
