@@ -25,56 +25,71 @@ public class DownloadBatch {
 	
 	private final HospitalRepository hospitalRepository;
 	
-	@Scheduled(cron= "0 * * * * *")
+	@Scheduled(cron= "0 * * * * *", zone = "Asia/Seoul")
  	public void startBatch() throws Exception {
 		log.info("cron test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("cron Test 입니다. !!!");
+		Adowload(); // - DB 삭제까지 이루어짐
 	}
-
 	
-	@Autowired
 	public void Adowload () {
 		//1. 공공데이터 다운로드
-		
 		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
 		int pageNo = 1;
 		int numOfRows = 1000;
 		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-		String spclAdmTyCd = "A0";
+		String[] spclAdmTyCd = {"A0","97","99"};
 		String type = "json";
+
 		try {
-			// Dto 변환을 위한 RestTemplate
-			RestTemplate rt = new RestTemplate();
-			// URI를 쉽게 만들어주는 components
-			UriComponents uriComponents = UriComponentsBuilder.newInstance()
+			// 가져온 데이터를 담을 콜렉션
+			List<Hospital> hospitals = new ArrayList<>();
+			
+			// spclAdmTyCd 갯수 만큼 종류 만큼
+			for (int i=0; i< spclAdmTyCd.length; i++){
+				
+				// Dto 변환을 위한 RestTemplate
+				RestTemplate rt = new RestTemplate();
+			
+				// URI를 쉽게 만들어주는 components
+				UriComponents uriComponents = UriComponentsBuilder.newInstance()
 		            .scheme("http")
 		            .host("apis.data.go.kr")
 		            .path("/B551182/pubReliefHospService/getpubReliefHospList")
 		            .queryParam("serviceKey", serviceKey)
 		            .queryParam("pageNo", pageNo)
 		            .queryParam("numOfRows", numOfRows)
-		            .queryParam("spclAdmTyCd", spclAdmTyCd)
+		            .queryParam("spclAdmTyCd", spclAdmTyCd[i])
 		            .queryParam("_type", type)
 		            .build(true);
-			// get 요청으로 url보내서 ResponseDto로 맵핑
-			ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
-			List<Item> items = dto.getResponse().getBody().getItems().getItem();
+				
+				System.out.println(uriComponents.toUri());
+				// get 요청으로 url보내서 ResponseDto로 맵핑
+				ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
+				//System.out.println(dto.getResponse());
+				List<Item> items = new ArrayList<>();
+				items = dto.getResponse().getBody().getItems().getItem();
 
-			// 가져온 데이터를 담을 콜렉션
-			List<Hospital> hospitals = new ArrayList<>();
-			hospitals = items.stream().map(
-				(s) -> {
-					return Hospital.builder()
-					.adtFrDd(s.getAdtFrDd())
-					.hospTyTpCd(s.getHospTyTpCd())
-					.sgguNm(s.getSgguNm())
-					.sidoNm(s.getSidoNm())
-					.spclAdmTyCd(s.getSpclAdmTyCd())
-					.telno(s.getTelno())
-					.yadmNm(s.getYadmNm())
-					.build();
-				}
-			).collect(Collectors.toList());
+				// 콜렉션에 담기
+					hospitals.addAll(items.stream().map(
+					(s) -> {
+						return Hospital.builder()
+						.adtFrDd(s.getAdtFrDd())
+						.hospTyTpCd(s.getHospTyTpCd())
+						.sgguNm(s.getSgguNm())
+						.sidoNm(s.getSidoNm())
+						.spclAdmTyCd(s.getSpclAdmTyCd())
+						.telno(s.getTelno())
+						.yadmNm(s.getYadmNm())
+						.build();
+					}
+				).collect(Collectors.toList()));
+			}
+			for(Hospital h : hospitals){
+				//System.out.println(h.getHospTyTpCd());
+			}
+			// 기존 데이터 다 삭제하기 - yml에서 ddl update로 체크하기
+			hospitalRepository.deleteAll();
 
 			// 배치시간에 DB에 insert하기 ( 하루에 한번 ?)
 			hospitalRepository.saveAll(hospitals);
@@ -82,76 +97,6 @@ public class DownloadBatch {
 			e.printStackTrace();
 		} finally{
 			
-		}
-	}
-	public void Bdowload () {
-		//1. 공공데이터 다운로드
-		
-		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
-		int pageNo = 1;
-		int numOfRows = 1000;
-		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-		String spclAdmTyCd = "97";
-		String type = "json";
-		try {
-			// Dto 변환을 위한 RestTemplate
-			RestTemplate rt = new RestTemplate();
-			// URI를 쉽게 만들어주는 components
-			UriComponents uriComponents = UriComponentsBuilder.newInstance()
-		            .scheme("http")
-		            .host("apis.data.go.kr")
-		            .path("/B551182/pubReliefHospService/getpubReliefHospList")
-		            .queryParam("serviceKey", serviceKey)
-		            .queryParam("pageNo", pageNo)
-		            .queryParam("numOfRows", numOfRows)
-		            .queryParam("spclAdmTyCd", spclAdmTyCd)
-		            .queryParam("_type", type)
-		            .build(true);
-			// get 요청으로 url보내서 ResponseDto로 맵핑
-			ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
-			
-			List<Item> items = dto.getResponse().getBody().getItems().getItem();
-			int count =0;
-	        for(Item i : items) {
-	        	System.out.println(i.getYadmNm()+" count: "+count++);
-	        }
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void Cdowload () {
-		//1. 공공데이터 다운로드
-		
-		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
-		int pageNo = 1;
-		int numOfRows = 1000;
-		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-		String spclAdmTyCd = "99";
-		String type = "json";
-		try {
-			// Dto 변환을 위한 RestTemplate
-			RestTemplate rt = new RestTemplate();
-			// URI를 쉽게 만들어주는 components
-			UriComponents uriComponents = UriComponentsBuilder.newInstance()
-		            .scheme("http")
-		            .host("apis.data.go.kr")
-		            .path("/B551182/pubReliefHospService/getpubReliefHospList")
-		            .queryParam("serviceKey", serviceKey)
-		            .queryParam("pageNo", pageNo)
-		            .queryParam("numOfRows", numOfRows)
-		            .queryParam("spclAdmTyCd", spclAdmTyCd)
-		            .queryParam("_type", type)
-		            .build(true);
-			// get 요청으로 url보내서 ResponseDto로 맵핑
-			ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
-			
-			List<Item> items = dto.getResponse().getBody().getItems().getItem();
-			int count =0;
-	        for(Item i : items) {
-	        	System.out.println(i.getYadmNm()+" count: "+count++);
-	        }
-		} catch(Exception e) {
-			e.printStackTrace();
 		}
 	}
 }
