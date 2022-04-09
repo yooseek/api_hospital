@@ -37,7 +37,7 @@
 
 <div class="container-fluid mt-3">
   <h3>코로나 병원 조회 서비스</h3>
-  <form action="/hospital" method="get">
+  <form>
     <div class="mb-3 mt-3">
         <select class="form-select mt-3" name="sidoNm" id="sidoNm">
             {{#sidoNms}}
@@ -49,7 +49,7 @@
       <select class="form-select mt-3" name="sgguNm" id="sgguNm">
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">병원찾기</button>
+    <button type="button" class="btn btn-primary" id="btn-submit">병원찾기</button>
   </form>
 </div>
 <hr/>
@@ -63,49 +63,12 @@
             <th>전화번호</th>
           </tr>
         </thead>
-        <tbody>
-            {{#hospitals}}
-          <tr>
-            <td>{{yadmNm}}</td>
-            <td>{{spclAdmTyCd}}</td>
-            <td>{{telno}}</td>
-          </tr>
-            {{/hospitals}}
+        <tbody id="tbody-hospital">
         </tbody>
       </table>
 </div>
 
-<script>
-    var setSgguNm = function(response) {
-        var sgguNm = document.querySelector("#sgguNm");
-        // 목록 초기화하기
-        sgguNm.innerHTML = "";
-        // 받아온 데이터 하나씩 추가하기
-        response.forEach( (e) => { 
-            var optionEL = document.createElement("option");
-            optionEL.text = e;
-            sgguNm.append(optionEL);
-        });
-    }
-    var getSgguNm = async function (selectSidoNm) {
-        var response = await fetch(`http://localhost:8765/api/sgguNm?sidoNm=${selectSidoNm}`);
-        var responseParsing = await response.json();
-        setSgguNm(responseParsing);
-    }
-
-    var sidoNm = document.querySelector("#sidoNm");
-    
-    var init = new function(){
-        var selectSidoNm = sidoNm.value;
-        getSgguNm(selectSidoNm);
-    };
-    sidoNm.addEventListener("change", function(e) {
-        var selectSidoNm = e.target.value;
-        // 백틱 숫자 옆에 있는 ` 사용하면 자바스크립트 변수 바인딩 가능
-        getSgguNm(selectSidoNm);
-    });
-    
-</script>
+<script src="js/hospital.js"></script>
 </body>
 </html>
 

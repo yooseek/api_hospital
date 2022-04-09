@@ -3,6 +3,7 @@ package com.cos.hospital.Controller;
 import java.util.List;
 
 import com.cos.hospital.domain.HospitalRepository;
+import com.cos.hospital.domain.Hospital;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 @Controller
@@ -23,11 +25,8 @@ public class HospitalController {
     }
 
     @GetMapping("/hospital")
-    public String hospital(String sidoNm , String sgguNm, Model model) {
+    public String hospital(Model model) {
         model.addAttribute("sidoNms",hRepository.mFindSidoNm());
-        if(sidoNm != null && sgguNm != null){
-            model.addAttribute("hospitals", hRepository.mFindHospital(sidoNm, sgguNm));
-        }
         return "hospital"; 
     }
 
@@ -37,4 +36,10 @@ public class HospitalController {
         return hRepository.mFindSgguNm(sidoNm);
     }
 
+    @GetMapping("/api/hospital")
+    // json으로 바꿀예정
+    public @ResponseBody List<Hospital> hospitals(String sidoNm , String sgguNm){
+
+        return hRepository.mFindHospital(sidoNm,sgguNm);
+    }
 }

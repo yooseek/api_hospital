@@ -24,7 +24,7 @@ public class DownloadBatch {
 	
 	private final HospitalRepository hospitalRepository;
 	
-	@Scheduled(cron= "0 * * * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
+	@Scheduled(cron= "0 38 * * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
  	public void startBatch() throws Exception {
 		log.info("cron test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("cron Test 입니다. !!!");
