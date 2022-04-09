@@ -1,7 +1,5 @@
 package batch;
 
-import org.yaml.snakeyaml.util.UriEncoder;
-
 import lombok.Builder;
 import lombok.Data;
 

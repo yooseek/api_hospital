@@ -1,32 +1,16 @@
 package batch;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.Hospital;
 
 
 @Component
@@ -38,8 +22,8 @@ public class DownloadBatchTest {
 		
 		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
 		int pageNo = 1;
-		int numOfRows = 10;
-		String spclAdmTyCd = "A0";
+		int numOfRows = 1000;
+		String spclAdmTyCd = "97";
 		String type = "json";
 		try {
 			// Dto 변환을 위한 RestTemplate
@@ -59,9 +43,22 @@ public class DownloadBatchTest {
 			ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
 			
 			List<Item> items = dto.getResponse().getBody().getItems().getItem();
-	        for(Item i : items) {
-	        	System.out.println(i.getYadmNm());
-	        }
+			List<Hospital> hospitals = new ArrayList<>();
+			hospitals = items.stream().map(
+				(s) -> {
+					return Hospital.builder()
+					.adtFrDd(s.getAdtFrDd())
+					.hospTyTpCd(s.getHospTyTpCd())
+					.sgguNm(s.getSgguNm())
+					.sidoNm(s.getSidoNm())
+					.spclAdmTyCd(s.getSpclAdmTyCd())
+					.telno(s.getTelno())
+					.yadmNm(s.getYadmNm())
+					.build();
+				}
+			).collect(Collectors.toList());
+			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
