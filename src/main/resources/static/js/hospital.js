@@ -1,7 +1,7 @@
 // sgguNm
 
 var getSgguNm = async function (selectSidoNm) {
-    var response = await fetch(`http://localhost:8765/api/sgguNm?sidoNm=${selectSidoNm}`);
+    var response = await fetch(`http://localhost:80/api/sgguNm?sidoNm=${selectSidoNm}`);
     var responseParsing = await response.json();
     setSgguNm(responseParsing);
 }
@@ -32,7 +32,7 @@ sidoNm.addEventListener("change", function(e) {
 // hospital
 var getHospital = async function(sidoNm,sgguNm) {
     
-    var response = await fetch(`http://localhost:8765/api/hospital?sidoNm=${sidoNm}&sgguNm=${sgguNm}`);
+    var response = await fetch(`http://localhost:80/api/hospital?sidoNm=${sidoNm}&sgguNm=${sgguNm}`);
     var responseParsing = await response.json();
     setHospital(responseParsing);
 
