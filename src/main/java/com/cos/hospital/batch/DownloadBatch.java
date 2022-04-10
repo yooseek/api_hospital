@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.cos.hospital.domain.Hospital;
 import com.cos.hospital.domain.HospitalRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -14,23 +15,20 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 // 1주일에 한번씩 다운로드 해서 DB에 변경하기
 // 전체 데이터를 가져오고 삭제 후 추가
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DownloadBatch {
 	
 	private final HospitalRepository hospitalRepository;
 	
-	@Scheduled(cron= "0 38 * * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
+	@Scheduled(cron= "0 0 2 * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
  	public void startBatch() throws Exception {
-		log.info("cron test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("cron Test 입니다. !!!");
 		Adowload(); // - DB 삭제까지 이루어짐
 	}
 	
+	@Autowired
 	public void Adowload () {
 		//1. 공공데이터 다운로드
 		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
