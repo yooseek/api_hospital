@@ -3,6 +3,9 @@ server:
   servlet:
     encoding:
       charset: utf-8
+logging:
+  level:
+    org.springframework: debug
 spring:
   datasource:
    url: jdbc:h2:mem:test

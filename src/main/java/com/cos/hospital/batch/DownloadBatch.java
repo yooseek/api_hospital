@@ -23,12 +23,12 @@ public class DownloadBatch {
 	
 	private final HospitalRepository hospitalRepository;
 	
-	@Scheduled(cron= "0 0 2 * * *", zone = "Asia/Seoul") // 매시간 15분 마다 실행
+	@Scheduled(cron= "0 0 2 * * *", zone = "Asia/Seoul") // 매일 오후 2시에 실행
  	public void startBatch() throws Exception {
 		Adowload(); // - DB 삭제까지 이루어짐
 	}
 	
-	@Autowired
+	//@Autowired
 	public void Adowload () {
 		//1. 공공데이터 다운로드
 		String serviceKey = "cd%2FYh69sjlw4yDYGYjzwtIsDBvxvvULRl3U6rI%2Bofh%2F774Vbx%2FbRBh14DKzxJmSRQ9WKxEEZF5ME01PunggJgA%3D%3D";
@@ -92,8 +92,6 @@ public class DownloadBatch {
 			hospitalRepository.saveAll(hospitals);
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally{
-			
 		}
 	}
 }
