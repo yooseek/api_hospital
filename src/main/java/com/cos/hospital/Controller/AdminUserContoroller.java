@@ -7,6 +7,10 @@ import com.cos.hospital.domain.UserV2;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -74,9 +78,9 @@ public class AdminUserContoroller {
     @GetMapping(value = "/user/{id}", produces = "application/vnd.company.appv2+json") //MIME Type
     public MappingJacksonValue retrieveUsersV2(@PathVariable Integer id){
         // User를 찾음
-        User user = userRepository.getById(id);
+        Optional<User> user = userRepository.findById(id);
         // 없으면 UserNotFoundException 발생
-        if(user.getId() == null) {
+        if(user.isEmpty()) {
             throw new UserNotFoundException(String.format("ID[%s] not found",id));
         }
 

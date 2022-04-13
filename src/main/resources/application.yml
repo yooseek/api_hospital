@@ -24,3 +24,11 @@ spring:
     show-sql: true
   messages:
     basename: messages
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
