@@ -24,11 +24,24 @@ spring:
     show-sql: true
   messages:
     basename: messages
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+  security:
+    user:
+      name: user
+      password: seek
+# swagger2
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+# swagger3
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    path: /swagger-ui/index.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true

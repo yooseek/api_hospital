@@ -6,10 +6,12 @@ import com.cos.hospital.domain.UserRepository;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+// swagger3
+@Tag(name = "UserController")
 @RestController
 public class UserController {
 
@@ -34,11 +38,14 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    //swgger3
+    @Operation(description = "전체회원조회")
     @GetMapping("/users")
     public List<User> retrieveAllUsers(){
         return userRepository.findAll();
     }
 
+    @Operation(description = "회원조회")
     @GetMapping("/users/{id}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content =
@@ -71,8 +78,10 @@ public class UserController {
         return mapping;
     }
 
+
     // Valid 어노테이션 - 디펜던시 추가
     @PostMapping("/users")
+    @Operation(description = "회원생성")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user){
         User newUser = userRepository.save(user);
 
@@ -84,7 +93,7 @@ public class UserController {
         // 201번 create 상태코드
         return ResponseEntity.created(location).build();
     }
-
+    @Operation(description = "회원삭제")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable int id){
 

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class DBInitialize {
 
+    /*
     // 시작할 때 커맨드라인으로 실행
     @Bean
     public CommandLineRunner initDB(HospitalRepository hospitalRepository){
@@ -82,5 +83,9 @@ public class DBInitialize {
                 e.printStackTrace();
             }
         };
+
     }
+
+
+     */
 }
