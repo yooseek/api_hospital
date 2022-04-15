@@ -34,7 +34,7 @@ public class DownloadBatch {
 		int pageNo = 1;
 		int numOfRows = 1000;
 		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-		String[] spclAdmTyCd = {"A0","97","99"};
+		String[] spclAdmTyCd = {"97","99"}; // "A0" 에러
 		String[] tempType = {"국민안심병원","코로나 검사 실시기관","코로나 선별진료소 운영기관"};
 		String type = "json";
 

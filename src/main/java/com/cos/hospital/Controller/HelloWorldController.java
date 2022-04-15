@@ -1,5 +1,6 @@
 package com.cos.hospital.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ public class HelloWorldController {
         return new HelloWorldBean(String.format("Hello World, %s",name));
     }
 
+    @Operation(description = "다국어 처리")
     @GetMapping(path = "/hello-world-internationalized")
     public String helloWorldInternationalized
             (@RequestHeader(name = "Accept-Language", required = false) Locale locale){

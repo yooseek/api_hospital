@@ -1,6 +1,12 @@
 package com.cos.hospital.batch;
 
 import java.util.List;
+import java.util.Optional;
+
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 
@@ -16,7 +22,8 @@ class Header {
 	// 결과 메세지
 	private String resultMsg; 
 }
-@Data 
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class Item {
 	// 운영 가능 일자
 	private Integer adtFrDd;

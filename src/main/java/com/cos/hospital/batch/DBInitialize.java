@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class DBInitialize {
 
-    /*
-    // 시작할 때 커맨드라인으로 실행
+
     @Bean
     public CommandLineRunner initDB(HospitalRepository hospitalRepository){
         return (args) -> {
@@ -26,7 +25,7 @@ public class DBInitialize {
             int pageNo = 1;
             int numOfRows = 1000;
             // A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-            String[] spclAdmTyCd = {"A0","97","99"};
+            String[] spclAdmTyCd = {"97","99"}; // "A0" 에러
             String[] tempType = {"국민안심병원","코로나 검사 실시기관","코로나 선별진료소 운영기관"};
             String type = "json";
 
@@ -55,8 +54,10 @@ public class DBInitialize {
                     // get 요청으로 url보내서 ResponseDto로 맵핑
                     ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
                     //System.out.println(dto.getResponse());
-                    List<Item> items = new ArrayList<>();
-                    items = dto.getResponse().getBody().getItems().getItem();
+                    if(dto.getResponse().getBody().getItems().getItem().isEmpty()){
+                        continue;
+                    }
+                    List<Item> items = dto.getResponse().getBody().getItems().getItem();
 
                     // 카테고리로 바꿔서 DB에 저장
                     String category = tempType[i];
@@ -86,6 +87,4 @@ public class DBInitialize {
 
     }
 
-
-     */
 }

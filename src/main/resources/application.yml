@@ -22,6 +22,8 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     show-sql: true
+    defer-datasource-initialization: true # hibernate 와 .sql 순번 조정
+    generate-ddl: true #  해당 데이터를 근거로 서버 시작 시점에 DDL문을 생성하여 DB에 적용한다.
   messages:
     basename: messages
   security:

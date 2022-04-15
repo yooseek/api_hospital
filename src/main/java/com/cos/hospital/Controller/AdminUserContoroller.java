@@ -7,6 +7,7 @@ import com.cos.hospital.domain.UserV2;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -50,6 +51,7 @@ public class AdminUserContoroller {
 //    @GetMapping(value = "/user/{id}/", params = "version=1") // Param 방식
 //    @GetMapping(value = "/user/{id}", headers = "X-API-VERSION=1") // Header 방식
     @GetMapping(value = "/user/{id}", produces = "application/vnd.company.appv1+json") //MIME Type
+    @Operation(description = "버전 1")
     public MappingJacksonValue retrieveUsersV1(@PathVariable Integer id){
         // User를 찾음
         Optional<User> user = userRepository.findById(id);
@@ -76,6 +78,7 @@ public class AdminUserContoroller {
 //    @GetMapping(value = "/user/{id}/", params = "version=2") // Param 방식
 //    @GetMapping(value = "/user/{id}", headers = "X-API-VERSION=2") // Header 방식
     @GetMapping(value = "/user/{id}", produces = "application/vnd.company.appv2+json") //MIME Type
+    @Operation(description = "버전 2")
     public MappingJacksonValue retrieveUsersV2(@PathVariable Integer id){
         // User를 찾음
         Optional<User> user = userRepository.findById(id);

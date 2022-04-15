@@ -23,7 +23,7 @@ public class DownloadBatchTest {
 		int pageNo = 1;
 		int numOfRows = 1000;
 		// A0 - 국민안심병원 , 97 - 코로나검사실시기관, 99 - 코로나 선별진료소 운영기관
-		String[] spclAdmTyCd = {"A0","97","99"};
+		String[] spclAdmTyCd = {"97","99"}; //"A0" 에러
 		String[] tempType = {"국민안심병원","코로나 검사 실시기관","코로나 선별진료소 운영기관"};
 		String type = "json";
 
@@ -51,9 +51,12 @@ public class DownloadBatchTest {
 				
 				// get 요청으로 url보내서 ResponseDto로 맵핑
 				ResponseDto dto = rt.getForObject(uriComponents.toUri(), ResponseDto.class);
+				if(dto.getResponse().getBody().getItems().equals("")){
+					continue;
+				}
+
 				//System.out.println(dto.getResponse());
-				List<Item> items = new ArrayList<>();
-				items = dto.getResponse().getBody().getItems().getItem();
+				List<Item> items = dto.getResponse().getBody().getItems().getItem();
 
 				// 카테고리로 바꿔서 DB에 저장
 				String category = tempType[i];
@@ -73,7 +76,7 @@ public class DownloadBatchTest {
 				).collect(Collectors.toList()));
 			}
 			for(Hospital h : hospitals){
-				System.out.println(h.getHospTyTpCd());
+				System.out.println(h.getTelno());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
