@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 @Configuration
-public class SwaggerConfig{
+public class SwaggerConfig {
     // SpringDoc config
     @Bean
     public OpenAPI openAPI() {

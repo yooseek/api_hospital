@@ -24,9 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal (AuthenticationManagerBuilder auth) throws Exception{
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-            auth.inMemoryAuthentication()
+        auth.inMemoryAuthentication()
                 .withUser("username")
                 .password("{noop}seek") //{noop} - 어떠한 동작도 하지않음 가공X
                 .roles("USER");

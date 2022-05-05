@@ -20,28 +20,28 @@ public class HelloWorldController {
     ///hello-world (endPoint)
     // @RequestMapping (method = RequestMethod.GET, path="/hello-world")
     @GetMapping(path = "/hello-world")
-    public String helloWorld(){
+    public String helloWorld() {
         return "Hello World";
     }
 
     //반환되는 값이 객체이면 json으로 자동 변환
     @GetMapping(path = "/hello-world-been")
-    public HelloWorldBean helloWorldBean(){
+    public HelloWorldBean helloWorldBean() {
         return new HelloWorldBean("Hello World");
     }
 
     // PathVariable vs RequestParam
     @GetMapping(path = "/hello-world-been/path-variable/{name}")
-    public HelloWorldBean helloWorldBeanName(@PathVariable String name){
-        return new HelloWorldBean(String.format("Hello World, %s",name));
+    public HelloWorldBean helloWorldBeanName(@PathVariable String name) {
+        return new HelloWorldBean(String.format("Hello World, %s", name));
     }
 
     @Operation(description = "다국어 처리")
     @GetMapping(path = "/hello-world-internationalized")
     public String helloWorldInternationalized
-            (@RequestHeader(name = "Accept-Language", required = false) Locale locale){
+            (@RequestHeader(name = "Accept-Language", required = false) Locale locale) {
         // 프로퍼티에 등록한 이름, 그것이 가변 변수라면 채울 파라메타, Locale 객체
-        return messageSource.getMessage("greeting.message",null,locale);
+        return messageSource.getMessage("greeting.message", null, locale);
     }
 
 }

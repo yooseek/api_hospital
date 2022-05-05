@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-public class HospitalController {   
+public class HospitalController {
 
     private final HospitalRepository hRepository;
 
@@ -27,15 +27,16 @@ public class HospitalController {
 
     @GetMapping("/hospital")
     public String hospital(Model model) {
-        model.addAttribute("sidoNms",hRepository.mFindSidoNm());
-        return "hospital"; 
+        model.addAttribute("sidoNms", hRepository.mFindSidoNm());
+        return "hospital";
     }
 
     @Operation(description = "구 이름 조회")
     @GetMapping("/api/sgguNm")
     // json으로 바꿀예정
-    public @ResponseBody List<String> sgguNm(String sidoNm){
-        if(hRepository.mFindSgguNm(sidoNm).isEmpty()){
+    public @ResponseBody
+    List<String> sgguNm(String sidoNm) {
+        if (hRepository.mFindSgguNm(sidoNm).isEmpty()) {
             throw new RuntimeException("잘못된 시도명입니다.");
         }
         return hRepository.mFindSgguNm(sidoNm);
@@ -44,8 +45,9 @@ public class HospitalController {
     @GetMapping("/api/hospital")
     @Operation(description = "병원 조회")
     // json으로 바꿀예정
-    public @ResponseBody List<Hospital> hospitals(String sidoNm , String sgguNm){
+    public @ResponseBody
+    List<Hospital> hospitals(String sidoNm, String sgguNm) {
 
-        return hRepository.mFindHospital(sidoNm,sgguNm);
+        return hRepository.mFindHospital(sidoNm, sgguNm);
     }
 }

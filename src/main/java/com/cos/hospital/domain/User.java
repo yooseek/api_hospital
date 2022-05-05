@@ -26,8 +26,8 @@ public class User {
 
     private Integer Id2;
     //@ApiModelProperty(notes = "사용자의 이름을 입력해 주세요") // swagger2
-    @Schema(description = "유저이름" , example = "시기") // swagger3
-    @Size(min=2, message = "Name은 두 글자 이상 입력해 주세요.")
+    @Schema(description = "유저이름", example = "시기") // swagger3
+    @Size(min = 2, message = "Name은 두 글자 이상 입력해 주세요.")
     private String name;
     @Past
     private Date joinDate;

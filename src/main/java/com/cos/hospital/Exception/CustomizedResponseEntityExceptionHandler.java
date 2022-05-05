@@ -16,9 +16,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     // Exception이 발생했을 때
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request){
+    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse =
-                new ExceptionResponse(new Date(),ex.getMessage(),request.getDescription(false));
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
         // 500번 서버에러
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -26,9 +26,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     // UserNotFoundException이 발생했을 때
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request){
+    public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse =
-                new ExceptionResponse(new Date(),ex.getMessage(),request.getDescription(false));
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
         // 500번 서버에러
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -39,8 +39,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         ExceptionResponse exceptionResponse =
-                new ExceptionResponse(new Date(),"Validation Failed",ex.getBindingResult().toString());
+                new ExceptionResponse(new Date(), "Validation Failed", ex.getBindingResult().toString());
         // Bad Request 에러
-        return new ResponseEntity(exceptionResponse,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

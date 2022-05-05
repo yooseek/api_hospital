@@ -44,12 +44,12 @@ public class UserController {
     //swgger3
     @Operation(description = "전체회원조회")
     @GetMapping("/users")
-    public MappingJacksonValue retrieveAllUsers(){
+    public MappingJacksonValue retrieveAllUsers() {
 
         // filter 생성 - 지정한 4개 컬럼만 가져옴
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","id2","name","joinDate","ssn","posts");
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "id2", "name", "joinDate", "ssn", "posts");
         // filterProvider 를 이용해서 필터 생성 - UserInfo이름에 만든 filter 추가
-        FilterProvider filters = new SimpleFilterProvider().addFilter("UserInfo",filter);
+        FilterProvider filters = new SimpleFilterProvider().addFilter("UserInfo", filter);
 
         // User를 Jackson을 이용해 MappingJacksonValue로 생성
         MappingJacksonValue mapping = new MappingJacksonValue(userRepository.findAll());
@@ -63,12 +63,12 @@ public class UserController {
     @GetMapping("/users/{id}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content =
-                    { @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)) })
+                    {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
     })
-    public MappingJacksonValue retrieveUser(@PathVariable Integer id){
+    public MappingJacksonValue retrieveUser(@PathVariable Integer id) {
         Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()) {
-            throw new UserNotFoundException(String.format("ID[%s] not found",id));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
         }
 
         //HATEOAS 사용
@@ -80,9 +80,9 @@ public class UserController {
         resource.add(linkBuilder.withRel("all-users"));
 
         // filter 생성 - 지정한 4개 컬럼만 가져옴
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","name","joinDate","ssn");
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "joinDate", "ssn");
         // filterProvider 를 이용해서 필터 생성 - UserInfo이름에 만든 filter 추가
-        FilterProvider filters = new SimpleFilterProvider().addFilter("UserInfo",filter);
+        FilterProvider filters = new SimpleFilterProvider().addFilter("UserInfo", filter);
 
         // User를 Jackson을 이용해 MappingJacksonValue로 생성
         MappingJacksonValue mapping = new MappingJacksonValue(resource);
@@ -96,7 +96,7 @@ public class UserController {
     // Valid 어노테이션 - 디펜던시 추가
     @PostMapping("/users")
     @Operation(description = "회원생성")
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User newUser = userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -107,14 +107,15 @@ public class UserController {
         // 201번 create 상태코드
         return ResponseEntity.created(location).build();
     }
+
     @Operation(description = "회원삭제")
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable int id){
+    public ResponseEntity<User> deleteUser(@PathVariable int id) {
 
         Optional<User> findUser = userRepository.findById(id);
-        if(findUser.isEmpty()){
-            throw new UserNotFoundException(String.format("ID[%s] not found",id));
-        }else{
+        if (findUser.isEmpty()) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+        } else {
             userRepository.deleteById(id);
         }
 
@@ -123,11 +124,11 @@ public class UserController {
 
     @Operation(description = "Post 조회")
     @GetMapping("/users/{id}/posts")
-    public List<Post> retrieveALLPostByUser(@PathVariable Integer id){
+    public List<Post> retrieveALLPostByUser(@PathVariable Integer id) {
 
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()){
-            throw new UserNotFoundException(String.format("ID[%s] 는 없는 사용자입니다.",id));
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(String.format("ID[%s] 는 없는 사용자입니다.", id));
         }
 
         return user.get().getPosts();
@@ -136,11 +137,11 @@ public class UserController {
     @PostMapping("/users/{id}/posts")
     @Operation(description = "Post 생성")
     @Transactional
-    public ResponseEntity createPost(@PathVariable Integer id, @RequestBody Post post){
+    public ResponseEntity createPost(@PathVariable Integer id, @RequestBody Post post) {
 
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()){
-            throw new UserNotFoundException(String.format("ID[%s] 는 없는 사용자입니다.",id));
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(String.format("ID[%s] 는 없는 사용자입니다.", id));
         }
 
         post.setUser(user.get());
